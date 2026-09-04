@@ -1,0 +1,20 @@
+simple_voting.question_collection:
+  title: 'Questions'
+  description: 'Manage voting questions.'
+  route_name: entity.simple_voting_question.collection
+  parent: system.admin_content
+  weight: 20
+
+simple_voting.option_collection:
+  title: 'Options'
+  description: 'Manage voting options.'
+  route_name: entity.simple_voting_option.collection
+  parent: system.admin_content
+  weight: 21
+
+simple_voting.vote_collection:
+  title: 'Votes'
+  description: 'View registered votes.'
+  route_name: entity.simple_voting_vote.collection
+  parent: system.admin_content
+  weight: 22

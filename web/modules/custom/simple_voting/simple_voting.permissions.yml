@@ -1,0 +1,4 @@
+administer simple voting:
+  title: 'Administer simple voting'
+  description: 'Manage questions, options and votes.'
+  restrict access: true

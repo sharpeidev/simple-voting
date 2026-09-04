@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Simple Voting module.
+ */
+
+/**
+ * Implements hook_update_N().
+ */
+function simple_voting_update_10001(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $entity_type = $entity_type_manager->getDefinition('simple_voting_question');
+
+  $entity_definition_update_manager->installEntityType($entity_type);
+}
+
+/**
+ * Add a unique constraint to the question identifier.
+ */
+function simple_voting_update_10002(): void {
+  $database = \Drupal::database();
+
+  $database->schema()->addUniqueKey(
+    'simple_voting_question',
+    'simple_voting_question_identifier',
+    ['identifier']
+  );
+}
+
+/**
+ * Install the Option entity.
+ */
+function simple_voting_update_10003(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $entity_type = $entity_type_manager->getDefinition('simple_voting_option');
+
+  $entity_definition_update_manager->installEntityType($entity_type);
+}
+
+/**
+ * Install the Vote entity.
+ */
+function simple_voting_update_10004(): void {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $entity_type = $entity_type_manager->getDefinition('simple_voting_vote');
+
+  $entity_definition_update_manager->installEntityType($entity_type);
+}
+
+/**
+ * Add the unique constraint for votes.
+ */
+function simple_voting_update_10005(): void {
+  $database = \Drupal::database();
+
+  $database->schema()->addUniqueKey(
+    'simple_voting_vote',
+    'simple_voting_vote_user_question',
+    [
+      'user_id',
+      'question_id',
+    ]
+  );
+}
