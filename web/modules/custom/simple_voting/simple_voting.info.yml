@@ -1,0 +1,5 @@
+name: Simple Voting
+type: module
+description: 'Sistema de votação simples.'
+package: Custom
+core_version_requirement: ^11
