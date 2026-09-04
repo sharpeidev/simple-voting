@@ -1,0 +1,15 @@
+.idea/
+
+# Composer
+/vendor/
+
+# Drupal
+/web/sites/*/files/
+/web/sites/*/private/
+
+# Local settings
+/web/sites/*/settings.local.php
+/web/sites/*/services.local.yml
+
+# Lando
+.lando.local.yml
