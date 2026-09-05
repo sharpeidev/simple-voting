@@ -9,6 +9,7 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@simple_voting.voting_configuration'
+      - '@simple_voting.voting_logger'
 
   simple_voting.question:
     class: Drupal\simple_voting\Service\QuestionService
@@ -27,3 +28,13 @@ services:
       - '@simple_voting.voting'
       - '@simple_voting.voting_result'
       - '@simple_voting.voting_configuration'
+
+  simple_voting.voting_logger:
+    class: Drupal\simple_voting\Service\VotingLogger
+    arguments:
+      - '@logger.channel.simple_voting'
+
+  logger.channel.simple_voting:
+    parent: logger.channel_base
+    arguments:
+      - 'simple_voting'

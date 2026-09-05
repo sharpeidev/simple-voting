@@ -2,27 +2,27 @@
 
 namespace Drupal\simple_voting\Service;
 
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\simple_voting\Entity\Vote;
 use Drupal\simple_voting\Exception\InvalidVoteException;
 use Drupal\simple_voting\Exception\VoteAlreadyExistsException;
 use Drupal\simple_voting\Exception\VotingDisabledException;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 
+/**
+ * Provides voting business logic.
+ */
 class VotingService {
 
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly VotingConfiguration $votingConfiguration,
+    private readonly VotingLogger $votingLogger,
   ) {}
 
   /**
    * Registers a vote.
-   *
-   * @throws VotingDisabledException
-   * @throws InvalidVoteException
-   * @throws VoteAlreadyExistsException
    */
   public function vote(
     string $identifier,
@@ -30,16 +30,31 @@ class VotingService {
     AccountInterface $account,
   ): Vote {
     if (!$this->votingConfiguration->isVotingEnabled()) {
+      $this->votingLogger->voteRejected(
+        'Voting is disabled.',
+        (int) $account->id(),
+      );
+
       throw new VotingDisabledException('Voting is currently disabled.');
     }
 
     if ($account->isAnonymous()) {
+      $this->votingLogger->voteRejected(
+        'Authentication is required.',
+        (int) $account->id(),
+      );
+
       throw new InvalidVoteException('Authentication is required to vote.');
     }
 
     $question = $this->loadQuestionByIdentifier($identifier);
 
     if (!$question || !(bool) $question->get('status')->value) {
+      $this->votingLogger->voteRejected(
+        'Question not found or inactive.',
+        (int) $account->id(),
+      );
+
       throw new InvalidVoteException('Question not found or inactive.');
     }
 
@@ -48,20 +63,42 @@ class VotingService {
       ->load($optionId);
 
     if (!$option || !$option->get('status')->value) {
+      $this->votingLogger->voteRejected(
+        'Option not found or inactive.',
+        (int) $account->id(),
+        (int) $question->id(),
+      );
+
       throw new InvalidVoteException('Option not found or inactive.');
     }
 
     if ((int) $option->get('question_id')->target_id !== (int) $question->id()) {
-      throw new InvalidVoteException('Option does not belong to the question.');
+      $this->votingLogger->voteRejected(
+        'Option does not belong to the question.',
+        (int) $account->id(),
+        (int) $question->id(),
+      );
+
+      throw new InvalidVoteException(
+        'Option does not belong to the question.'
+      );
     }
 
-    $existing_vote = $this->findUserVote(
+    $existingVote = $this->findUserVote(
       (int) $question->id(),
       (int) $account->id(),
     );
 
-    if ($existing_vote) {
-      throw new VoteAlreadyExistsException('User has already voted on this question.');
+    if ($existingVote) {
+      $this->votingLogger->voteRejected(
+        'User has already voted on this question.',
+        (int) $account->id(),
+        (int) $question->id(),
+      );
+
+      throw new VoteAlreadyExistsException(
+        'User has already voted on this question.'
+      );
     }
 
     try {
@@ -76,6 +113,12 @@ class VotingService {
       $vote->save();
     }
     catch (IntegrityConstraintViolationException $exception) {
+      $this->votingLogger->voteRejected(
+        'Duplicate vote detected by database constraint.',
+        (int) $account->id(),
+        (int) $question->id(),
+      );
+
       throw new VoteAlreadyExistsException(
         'User has already voted on this question.',
         0,
@@ -83,11 +126,17 @@ class VotingService {
       );
     }
 
+    $this->votingLogger->voteRegistered(
+      (int) $account->id(),
+      (int) $question->id(),
+      (int) $option->id(),
+    );
+
     return $vote;
   }
 
   /**
-   * Loads a question by its unique identifier.
+   * Loads an active question by identifier.
    */
   private function loadQuestionByIdentifier(string $identifier): ?object {
     $ids = $this->entityTypeManager
@@ -109,9 +158,12 @@ class VotingService {
   }
 
   /**
-   * Finds a user's vote for a question.
+   * Finds an existing vote by user and question.
    */
-  private function findUserVote(int $questionId, int $userId): ?Vote {
+  private function findUserVote(
+    int $questionId,
+    int $userId,
+  ): ?Vote {
     $ids = $this->entityTypeManager
       ->getStorage('simple_voting_vote')
       ->getQuery()
