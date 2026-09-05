@@ -1,4 +1,4 @@
-# Simple Voting
+# Sistema de Votação Simples
 
 Sistema de votação simples desenvolvido em Drupal 11.
 
