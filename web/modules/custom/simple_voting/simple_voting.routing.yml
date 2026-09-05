@@ -53,3 +53,11 @@ simple_voting.cms_results:
     _title: 'Voting results'
   requirements:
     _permission: 'administer simple voting'
+
+simple_voting.cms_question_options:
+  path: '/admin/content/simple-voting/questions/{identifier}/options'
+  defaults:
+    _form: '\Drupal\simple_voting\Form\QuestionOptionsForm'
+    _title: 'Question options'
+  requirements:
+    _permission: 'administer simple voting'

@@ -35,12 +35,29 @@ class QuestionListBuilder extends EntityListBuilder {
       ? $this->t('Active')
       : $this->t('Inactive');
 
+    $row += parent::buildRow($entity);
+
     $row['operations']['data']['#links']['vote'] = [
       'title' => $this->t('Vote'),
-      'url' => $entity->toUrl('vote'),
+      'url' => \Drupal\Core\Url::fromRoute(
+        'simple_voting.cms_vote',
+        [
+          'identifier' => $entity->get('identifier')->value,
+        ],
+      ),
     ];
 
-    return $row + parent::buildRow($entity);
+    $row['operations']['data']['#links']['options'] = [
+      'title' => $this->t('Options'),
+      'url' => \Drupal\Core\Url::fromRoute(
+        'simple_voting.cms_question_options',
+        [
+          'identifier' => $entity->get('identifier')->value,
+        ],
+      ),
+    ];
+
+    return $row;
   }
 
 }
