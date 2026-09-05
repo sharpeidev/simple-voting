@@ -37,3 +37,19 @@ simple_voting.api.results:
   requirements:
     _user_is_logged_in: 'TRUE'
   methods: [GET]
+
+simple_voting.cms_vote:
+  path: '/admin/content/simple-voting/questions/{identifier}/vote'
+  defaults:
+    _form: '\Drupal\simple_voting\Form\VoteForm'
+    _title: 'Vote'
+  requirements:
+    _permission: 'administer simple voting'
+
+simple_voting.cms_results:
+  path: '/admin/content/simple-voting/questions/{identifier}/results'
+  defaults:
+    _controller: '\Drupal\simple_voting\Controller\VotingController::results'
+    _title: 'Voting results'
+  requirements:
+    _permission: 'administer simple voting'
