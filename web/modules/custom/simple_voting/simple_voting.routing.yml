@@ -28,6 +28,7 @@ simple_voting.api.vote:
     _controller: 'simple_voting.question_api_controller:vote'
   requirements:
     _user_is_logged_in: 'TRUE'
+    _csrf_token: 'TRUE'
   methods: [POST]
 
 simple_voting.api.results:
