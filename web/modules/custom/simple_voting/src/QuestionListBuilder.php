@@ -35,6 +35,11 @@ class QuestionListBuilder extends EntityListBuilder {
       ? $this->t('Active')
       : $this->t('Inactive');
 
+    $row['operations']['data']['#links']['vote'] = [
+      'title' => $this->t('Vote'),
+      'url' => $entity->toUrl('vote'),
+    ];
+
     return $row + parent::buildRow($entity);
   }
 

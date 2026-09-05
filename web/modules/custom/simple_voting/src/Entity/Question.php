@@ -37,7 +37,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "add-form" = "/admin/content/simple-voting/questions/add",
  *     "edit-form" = "/admin/content/simple-voting/questions/{simple_voting_question}/edit",
  *     "delete-form" = "/admin/content/simple-voting/questions/{simple_voting_question}/delete",
- *     "collection" = "/admin/content/simple-voting/questions"
+ *     "collection" = "/admin/content/simple-voting/questions",
+ *     "vote" = "/admin/content/simple-voting/questions/{simple_voting_question}/vote"
  *   }
  * )
  */
