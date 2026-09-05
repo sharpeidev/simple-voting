@@ -1,0 +1,101 @@
+{
+  "info": {
+    "_postman_id": "b6c8c9c8-8c4d-4a5d-9d5d-simple-voting",
+    "name": "Simple Voting API",
+    "description": "Collection for the Simple Voting API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://simple-voting.lndo.site"
+    },
+    {
+      "key": "question_identifier",
+      "value": "question-001"
+    },
+    {
+      "key": "option_id",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Questions",
+      "item": [
+        {
+          "name": "List questions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "questions"]
+            }
+          }
+        },
+        {
+          "name": "Get question",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/{{question_identifier}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "questions", "{{question_identifier}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Voting",
+      "item": [
+        {
+          "name": "Register vote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"option_id\": {{option_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/questions/{{question_identifier}}/vote",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "questions",
+                "{{question_identifier}}",
+                "vote"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get results",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/questions/{{question_identifier}}/results",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "questions",
+                "{{question_identifier}}",
+                "results"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
