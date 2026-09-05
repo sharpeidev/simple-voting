@@ -9,3 +9,21 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@simple_voting.voting_configuration'
+
+  simple_voting.question:
+    class: Drupal\simple_voting\Service\QuestionService
+    arguments:
+      - '@entity_type.manager'
+
+  simple_voting.voting_result:
+    class: Drupal\simple_voting\Service\VotingResultService
+    arguments:
+      - '@database'
+
+  simple_voting.question_api_controller:
+    class: Drupal\simple_voting\Controller\QuestionApiController
+    arguments:
+      - '@simple_voting.question'
+      - '@simple_voting.voting'
+      - '@simple_voting.voting_result'
+      - '@simple_voting.voting_configuration'

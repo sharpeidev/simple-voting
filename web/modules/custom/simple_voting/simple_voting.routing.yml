@@ -5,3 +5,35 @@ simple_voting.settings:
     _title: 'Simple Voting settings'
   requirements:
     _permission: 'administer simple voting'
+
+simple_voting.api.questions:
+  path: '/api/questions'
+  defaults:
+    _controller: 'simple_voting.question_api_controller:list'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+simple_voting.api.question:
+  path: '/api/questions/{identifier}'
+  defaults:
+    _controller: 'simple_voting.question_api_controller:show'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+simple_voting.api.vote:
+  path: '/api/questions/{identifier}/vote'
+  defaults:
+    _controller: 'simple_voting.question_api_controller:vote'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [POST]
+
+simple_voting.api.results:
+  path: '/api/questions/{identifier}/results'
+  defaults:
+    _controller: 'simple_voting.question_api_controller:results'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [GET]
