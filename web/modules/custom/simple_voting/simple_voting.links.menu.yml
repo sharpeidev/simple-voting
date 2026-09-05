@@ -18,3 +18,10 @@ simple_voting.vote_collection:
   route_name: entity.simple_voting_vote.collection
   parent: system.admin_content
   weight: 22
+
+simple_voting.settings:
+  title: 'Simple Voting'
+  description: 'Configure the Simple Voting system.'
+  route_name: simple_voting.settings
+  parent: system.admin_config_services
+

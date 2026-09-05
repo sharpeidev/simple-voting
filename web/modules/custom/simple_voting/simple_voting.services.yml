@@ -1,1 +1,5 @@
-services: {}
+services:
+  simple_voting.voting_configuration:
+    class: Drupal\simple_voting\Service\VotingConfiguration
+    arguments:
+      - '@config.factory'
