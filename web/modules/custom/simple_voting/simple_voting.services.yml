@@ -3,3 +3,9 @@ services:
     class: Drupal\simple_voting\Service\VotingConfiguration
     arguments:
       - '@config.factory'
+
+  simple_voting.voting:
+    class: Drupal\simple_voting\Service\VotingService
+    arguments:
+      - '@entity_type.manager'
+      - '@simple_voting.voting_configuration'
