@@ -26,6 +26,7 @@ class VotingResultService {
 
     $query->addField('vote', 'option_id', 'option_id');
     $query->addField($option_alias, 'title', 'title');
+    $query->addField($option_alias, 'weight', 'weight');
     $query->addExpression('COUNT(vote.id)', 'total_votes');
 
     $query->condition('vote.question_id', $question->id());
@@ -33,6 +34,7 @@ class VotingResultService {
 
     $query->groupBy('vote.option_id');
     $query->groupBy($option_alias . '.title');
+    $query->groupBy($option_alias . '.weight');
 
     $query->orderBy($option_alias . '.weight', 'ASC');
 
